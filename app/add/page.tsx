@@ -10,28 +10,7 @@ import { Label } from "@/components/ui/label";
 import { GitBranch, ArrowLeft, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getFormattedDateAndDay } from "@/utils/formatters/dateFormatter";
-import Footer from "@/components/shared/Footer";
-
-// Header component for Add Repository page
-const AddRepositoryHeader = ({ currentDay, currentDate }: { currentDay: string, currentDate: string }) => (
-  <div className="flex items-center justify-between mb-8 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-3 bg-blue-600 text-white rounded-full">
-        <GitBranch className="h-8 w-8" />
-      </div>
-      <div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">CodeVigil</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">{currentDay}, {currentDate}</p>
-      </div>
-    </div>
-    <Link href="/">
-      <Button variant="outline" className="border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700">
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Repositories
-      </Button>
-    </Link>
-  </div>
-);
+import Header from "@/components/shared/Header";
 
 // Repository form component
 const RepositoryForm = ({ 
@@ -170,12 +149,12 @@ export default function AddRepository() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="container mx-auto px-4 py-8">
-        <AddRepositoryHeader currentDay={currentDay} currentDate={currentDate} />
-
-        <h2 className="text-2xl font-bold mb-6 text-slate-800 dark:text-white px-2 py-1 border-l-4 border-blue-600">Add New Repository</h2>
-
+    <main>
+      <Header currentDay={currentDay} currentDate={currentDate} type="add" />
+      
+      <h2 className="text-2xl font-bold mb-6 text-slate-800 dark:text-white px-2 py-1 border-l-4 border-blue-600">Add New Repository</h2>
+      
+      <Card className="mx-auto max-w-2xl shadow-md">
         <RepositoryForm
           repoUrl={repoUrl}
           setRepoUrl={setRepoUrl}
@@ -185,9 +164,7 @@ export default function AddRepository() {
           loading={loading}
           handleSubmit={handleSubmit}
         />
-        
-        <Footer />
-      </div>
+      </Card>
     </main>
   );
 }

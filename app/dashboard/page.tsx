@@ -6,10 +6,10 @@ import { getFormattedDateAndDay } from "@/utils/formatters/dateFormatter";
 import { useMetrics } from "@/hooks/useMetrics";
 
 // Import shared components
-import Footer from "@/components/shared/Footer";
+import Header from "@/components/shared/Header";
+import RepositoryInfo from "@/components/dashboard/RepositoryInfo";
 
 // Import dashboard-specific components
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 import StatCards from "@/components/dashboard/StatCards";
 import ReviewTimeChart from "@/components/dashboard/ReviewTimeChart";
@@ -38,51 +38,44 @@ export default function Dashboard() {
   } = useMetrics(owner, repo, aggregation);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="container mx-auto px-4 py-8">
-        <DashboardHeader 
-          owner={owner}
-          repo={repo}
-          currentDay={currentDay}
-          currentDate={currentDate}
-          aggregation={aggregation}
-          onAggregationChange={setAggregation}
-        />
-
-        {loading ? (
-          <DashboardSkeleton />
-        ) : (
-          <>
-            <h2 className="text-2xl font-bold mb-4 text-slate-800 dark:text-white px-2 py-1 border-l-4 border-blue-600">Today's Stats</h2>
-            
-            <StatCards 
-              metrics={metrics}
-              prTrend={prTrend}
-              mergeTimeTrend={mergeTimeTrend}
-              reviewTrend={reviewTrend}
-            />
-
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              <ReviewTimeChart 
-                metrics={metrics} 
-                avgReviewTurnaround={avgReviewTurnaround} 
-              />
-              
-              <MergeTimeChart 
-                metrics={metrics} 
-                avgMergeTime={avgMergeTime} 
-              />
-            </div>
-
-            <PullRequestTrendsChart metrics={metrics} />
-            
-            <MetricsTable metrics={metrics} />
-          </>
-        )}
+    <main>
+      <Header 
+        currentDay={currentDay}
+        currentDate={currentDate}
+        type="dashboard"
+        aggregation={aggregation}
+        onAggregationChange={setAggregation}
+      />
+      <RepositoryInfo owner={owner} repo={repo} />
+      
+      {loading ? (
+        <DashboardSkeleton />
+      ) : (
+        <>
         
-        <Footer />
-      </div>
+          <StatCards 
+            metrics={metrics}
+            prTrend={prTrend}
+            mergeTimeTrend={mergeTimeTrend}
+            reviewTrend={reviewTrend}
+          />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <ReviewTimeChart 
+              metrics={metrics} 
+              avgReviewTurnaround={avgReviewTurnaround} 
+            />
+            <MergeTimeChart 
+              metrics={metrics} 
+              avgMergeTime={avgMergeTime} 
+            />
+          </div>
+          
+          <PullRequestTrendsChart metrics={metrics} />
+          
+          <MetricsTable metrics={metrics} />
+        </>
+      )}
     </main>
   );
 }
