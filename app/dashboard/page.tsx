@@ -85,14 +85,11 @@ export default function Dashboard() {
     }
   }, [owner, repo, aggregation]);
 
+  // Format time in hours and minutes
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-  };
-
-  const formatHours = (seconds: number) => {
-    return (seconds / 3600).toFixed(1);
   };
 
   // Calculate average review turnaround time for reference line
@@ -130,17 +127,21 @@ export default function Dashboard() {
   // Custom formatter for tooltips
   const formatTooltipValue = (value: any) => {
     if (typeof value === 'number') {
-      return [(value / 3600).toFixed(1) + ' hours', 'Review Time'];
+      const hours = Math.floor(value / 3600);
+      const minutes = Math.floor((value % 3600) / 60);
+      return [`${hours}h ${minutes}m`, 'Review Time'];
     }
-    return ['0 hours', 'Review Time'];
+    return ['0h 0m', 'Review Time'];
   };
 
   // Custom formatter for merge time tooltips
   const formatMergeTooltipValue = (value: any) => {
     if (typeof value === 'number') {
-      return [(value / 3600).toFixed(1) + ' hours', 'Merge Time'];
+      const hours = Math.floor(value / 3600);
+      const minutes = Math.floor((value % 3600) / 60);
+      return [`${hours}h ${minutes}m`, 'Merge Time'];
     }
-    return ['0 hours', 'Merge Time'];
+    return ['0h 0m', 'Merge Time'];
   };
 
   return (
@@ -259,7 +260,7 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="flex items-center mb-4">
                     <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
-                      {formatHours(metrics[0]?.median_review_turnaround_seconds || 0)} hours
+                      {formatTime(avgReviewTurnaround)}
                     </div>
                   </div>
                   <div className="h-[300px]">
@@ -288,7 +289,11 @@ export default function Dashboard() {
                             position: 'insideLeft',
                             style: { textAnchor: 'middle', fill: '#64748b' }
                           }}
-                          tickFormatter={(value) => (value / 3600).toFixed(1)}
+                          tickFormatter={(value) => {
+                            const hours = Math.floor(value / 3600);
+                            const minutes = Math.floor((value % 3600) / 60);
+                            return hours > 0 ? `${hours}h` : `${minutes}m`;
+                          }}
                           tick={{ fill: '#64748b' }}
                         />
                         <Tooltip 
@@ -328,7 +333,7 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="flex items-center mb-4">
                     <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                      {formatHours(metrics[0]?.median_merge_time_seconds || 0)} hours
+                      {formatTime(avgMergeTime)}
                     </div>
                   </div>
                   <div className="h-[300px]">
@@ -357,7 +362,11 @@ export default function Dashboard() {
                             position: 'insideLeft',
                             style: { textAnchor: 'middle', fill: '#64748b' }
                           }}
-                          tickFormatter={(value) => (value / 3600).toFixed(1)}
+                          tickFormatter={(value) => {
+                            const hours = Math.floor(value / 3600);
+                            const minutes = Math.floor((value % 3600) / 60);
+                            return hours > 0 ? `${hours}h` : `${minutes}m`;
+                          }}
                           tick={{ fill: '#64748b' }}
                         />
                         <Tooltip 
